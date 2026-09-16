@@ -3,19 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>看拼音写词语 · 七年级上册田字格</title>
+  <title>小北拼音写词生成器2026.9</title>
   <style>
-:root { --bg:#efe8d8; --panel:#f7f3ea; --ink:#1c241e; --muted:#5e6a62; --line:#d5cbb8; --accent:#2d6a4f; --warm:#b4532a; --paper:#fffdf8; --cell:52px; }
+:root { --bg:#efe8d8; --panel:#f7f3ea; --ink:#1c241e; --muted:#5e6a62; --line:#d5cbb8; --accent:#2d6a4f; --warm:#b4532a; --paper:#fffdf8; --cell:52px; --m-top:2.85cm; --m-right:2.5cm; --m-bottom:2.85cm; --m-left:2.5cm; }
 * { box-sizing: border-box; } html,body { margin:0; }
 body { font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif; color:var(--ink); background:var(--bg); min-height:100vh; }
 .app { display:grid; grid-template-columns:minmax(300px,360px) 1fr; min-height:100vh; }
 .sidebar { background:var(--panel); border-right:1px solid var(--line); padding:18px; overflow-y:auto; max-height:100vh; }
-.brand h1 { margin:0; font-size:18px; color:var(--accent); }
-.brand p { margin:4px 0 12px; color:var(--muted); font-size:12px; line-height:1.5; }
+.brand { display:flex; gap:10px; align-items:center; margin-bottom:8px; }
+.brand-mark { width:44px; height:44px; border:1px solid #000; position:relative; display:flex; align-items:center; justify-content:center; font-family:KaiTi,STKaiti,serif; font-size:22px; background:#fff; flex-shrink:0; }
+.brand-mark::before { content:""; position:absolute; left:0; right:0; top:50%; border-top:1px dashed #aaa; }
+.brand-mark::after { content:""; position:absolute; top:0; bottom:0; left:50%; border-left:1px dashed #aaa; }
+.brand h1 { margin:0; font-size:15px; line-height:1.35; color:var(--accent); }
 label.field { display:block; font-size:12px; color:var(--muted); margin:12px 0 6px; font-weight:600; }
-input[type=text], textarea, select { width:100%; border:1px solid var(--line); background:#fff; border-radius:6px; padding:8px 10px; font:inherit; color:var(--ink); }
+input[type=text], input[type=number], textarea, select { width:100%; border:1px solid var(--line); background:#fff; border-radius:6px; padding:8px 10px; font:inherit; color:var(--ink); }
 textarea { min-height:100px; resize:vertical; line-height:1.5; }
 .row { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.row-4 { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:6px; }
+.row-4 .tiny { font-size:11px; color:var(--muted); margin-bottom:4px; display:block; }
 .lessons { border:1px solid var(--line); border-radius:6px; background:#fff; max-height:220px; overflow:auto; padding:8px; }
 .lessons .unit { font-size:12px; color:var(--accent); font-weight:700; margin:8px 0 4px; }
 .lessons label { display:flex; gap:6px; align-items:flex-start; font-size:13px; padding:4px 2px; cursor:pointer; }
@@ -26,20 +31,13 @@ button { border:0; border-radius:6px; padding:8px 12px; font:inherit; font-size:
 .btn-ghost { background:#fff; border:1px solid var(--line); }
 .btn-warm { background:var(--warm); color:#fff; }
 .seg { display:flex; border:1px solid var(--line); border-radius:6px; overflow:hidden; margin-top:8px; }
-.seg button { flex:1; border-radius:0; background:#fff; }
+.seg button { flex:1; border-radius:0; background:#fff; padding:8px 6px; }
 .seg button.active { background:var(--accent); color:#fff; }
 .status { margin-top:10px; font-size:12px; color:var(--muted); }
-.editor-card { margin-top:12px; background:#fff; border:1px solid var(--line); border-radius:8px; padding:8px; }
-.editor-card h2 { margin:0 0 6px; font-size:12px; }
-.word-edit { display:flex; flex-wrap:wrap; gap:4px; padding:6px 0; border-bottom:1px dashed var(--line); }
-.syll { min-width:48px; text-align:center; border:1px solid var(--line); border-radius:6px; padding:3px 4px; cursor:pointer; }
-.syll.poly { border-color:#e8b48a; background:#fff8f1; }
-.syll .ch { font-family:KaiTi,STKaiti,serif; font-size:16px; }
-.syll .py { font-size:11px; }
 .workspace { padding:16px; overflow:auto; max-height:100vh; }
 .sheet-stack { display:flex; flex-direction:column; gap:16px; align-items:center; }
-.page { width:210mm; min-height:297mm; background:var(--paper); padding:14mm 15mm; position:relative; box-shadow:0 4px 18px rgba(0,0,0,.08); }
-.page.answer-mode::after { content:"答案页"; position:absolute; right:14mm; top:12mm; font-size:12px; color:var(--warm); border:1px solid #e8b48a; padding:1px 8px; border-radius:12px; }
+.page { width:210mm; min-height:297mm; background:var(--paper); padding:var(--m-top) var(--m-right) var(--m-bottom) var(--m-left); position:relative; box-shadow:0 4px 18px rgba(0,0,0,.08); box-sizing:border-box; }
+.page.answer-mode::after { content:"答案页"; position:absolute; right:var(--m-right); top:calc(var(--m-top) - 7mm); font-size:12px; color:var(--warm); border:1px solid #e8b48a; padding:1px 8px; border-radius:12px; }
 .page-title { margin:0; text-align:center; font-family:STKaiti,KaiTi,serif; font-size:26px; letter-spacing:.12em; }
 .meta { display:flex; justify-content:center; gap:22px; margin:10px 0 8mm; font-size:13px; }
 .meta u { display:inline-block; min-width:80px; border-bottom:1px solid #000; text-decoration:none; }
@@ -48,12 +46,12 @@ button { border:0; border-radius:6px; padding:8px 12px; font:inherit; font-size:
 .char { display:flex; flex-direction:column; align-items:center; width:var(--cell); }
 .pinyin { height:20px; line-height:20px; font-size:12px; font-family:"Times New Roman",serif; cursor:pointer; }
 .pinyin.poly { color:var(--warm); font-weight:700; }
-.cell { width:var(--cell); height:var(--cell); border:1px solid #000; position:relative; display:flex; align-items:center; justify-content:center; font-family:STKaiti,KaiTi,serif; font-size:calc(var(--cell)*0.72); margin-left:-1px; }
-.word .char:first-child .cell { margin-left:0; }
+.cell { width:var(--cell); height:var(--cell); border:1px solid #000; position:relative; display:flex; align-items:center; justify-content:center; font-family:STKaiti,KaiTi,serif; font-size:calc(var(--cell)*0.72); box-sizing:border-box; background:#fff; }
+.word .char + .char .cell { border-left:0; }
 .cell::before { content:""; position:absolute; left:0; right:0; top:50%; border-top:1px dashed #aaa; }
 .cell::after { content:""; position:absolute; top:0; bottom:0; left:50%; border-left:1px dashed #aaa; }
 .cell .han { position:relative; z-index:1; }
-.page-foot { position:absolute; left:15mm; right:15mm; bottom:10mm; display:flex; justify-content:space-between; font-size:11px; color:#555; }
+.page-foot { position:absolute; left:var(--m-left); right:var(--m-right); bottom:8mm; display:flex; justify-content:space-between; font-size:11px; color:#555; }
 .popover { position:fixed; z-index:50; background:#fff; border:1px solid var(--line); border-radius:8px; box-shadow:0 8px 20px rgba(0,0,0,.15); padding:10px; width:220px; display:none; }
 .popover.show { display:block; }
 .choices { display:flex; flex-wrap:wrap; gap:4px; margin:6px 0; }
@@ -74,8 +72,8 @@ button { border:0; border-radius:6px; padding:8px 12px; font:inherit; font-size:
   <div class="app">
     <aside class="sidebar">
       <div class="brand">
-        <h1>看拼音写词语生成器</h1>
-        <p>一至三课按课文词语，其余课按《读读写写》。拼音已写进本文件，用浏览器直接打开即可，不用联网。可单课或多课勾选。</p>
+        <div class="brand-mark">北</div>
+        <h1>小北拼音写词生成器2026.9</h1>
       </div>
       <label class="field">选择课文</label>
       <div class="lessons" id="lessonBox"></div>
@@ -109,29 +107,32 @@ button { border:0; border-radius:6px; padding:8px 12px; font:inherit; font-size:
           </select>
         </div>
       </div>
+      <label class="field">页边距（厘米）</label>
+      <div class="row-4">
+        <div><span class="tiny">上</span><input id="mTop" type="number" min="0.5" max="5" step="0.05" value="2.85" /></div>
+        <div><span class="tiny">下</span><input id="mBottom" type="number" min="0.5" max="5" step="0.05" value="2.85" /></div>
+        <div><span class="tiny">左</span><input id="mLeft" type="number" min="0.5" max="5" step="0.05" value="2.5" /></div>
+        <div><span class="tiny">右</span><input id="mRight" type="number" min="0.5" max="5" step="0.05" value="2.5" /></div>
+      </div>
       <div class="checks">
         <label><input type="checkbox" id="showMeta" checked /> 姓名班级</label>
         <label><input type="checkbox" id="markPoly" checked /> 多音字标橙</label>
-        <label><input type="checkbox" id="printBoth" /> 打印时带答案页</label>
       </div>
       <div class="btns">
         <button class="btn-primary" id="parseBtn" type="button">生成预览</button>
         <button class="btn-warm" id="printBtn" type="button">打印 / 保存 PDF</button>
       </div>
-      <label class="field">页面预览模式</label>
+      <label class="field">输出内容</label>
       <div class="seg" id="modeSeg">
-        <button class="active" data-mode="practice" type="button">练习页</button>
+        <button class="active" data-mode="practice" type="button">默写页</button>
         <button data-mode="answer" type="button">答案页</button>
+        <button data-mode="both" type="button">同时输出</button>
       </div>
       <div class="status" id="status">正在生成…</div>
-      <div class="editor-card" id="editorCard" hidden>
-        <h2>点击字音修改拼音</h2>
-        <div id="editorList"></div>
-      </div>
     </aside>
     <main class="workspace">
       <div class="toolbar" style="width:210mm;margin:0 auto 10px;font-size:12px;color:#5e6a62;display:flex;justify-content:space-between;">
-        <span>打印选 A4，边距「无」。勾选打印背景图形可保留田字格虚线。</span>
+        <span>打印选 A4，边距「无」。页边距默认上下 2.85cm、左右 2.5cm。</span>
         <span id="countNote"></span>
       </div>
       <div class="sheet-stack" id="sheetStack"></div>
@@ -304,12 +305,14 @@ var MARKS = { a:"āáǎàa", e:"ēéěèe", i:"īíǐìi", o:"ōóǒòo", u:"ū�
 
   function paginate(words) {
     var cell = +$("cellSize").value;
-    var usableW = 180, usableH = 240;
+    var m = getMargins();
+    var usableW = 210 - m.left * 10 - m.right * 10;
+    var usableH = 297 - m.top * 10 - m.bottom * 10 - 26;
     var itemH = (cell / 96) * 25.4 + 10;
     var pages = [];
     var cur = [], rowW = 0, usedH = 0;
     words.forEach(function (w) {
-      var wW = w.chars.length * (cell / 96) * 25.4 + 8;
+      var wW = w.chars.length * (cell / 96) * 25.4 + 7;
       if (cur.length && rowW + wW > usableW) { usedH += itemH + 6; rowW = 0; }
       if (usedH + itemH > usableH && cur.length) { pages.push(cur); cur = []; usedH = 0; rowW = 0; }
       cur.push(w); rowW += wW;
@@ -318,16 +321,39 @@ var MARKS = { a:"āáǎàa", e:"ēéěèe", i:"īíǐìi", o:"ōóǒòo", u:"ū�
     return pages.length ? pages : [[]];
   }
 
+  function getMargins() {
+    function n(id, d) {
+      var v = parseFloat($(id).value);
+      return Number.isFinite(v) ? v : d;
+    }
+    return {
+      top: n("mTop", 2.85),
+      bottom: n("mBottom", 2.85),
+      left: n("mLeft", 2.5),
+      right: n("mRight", 2.5)
+    };
+  }
+
+  function applyMargins() {
+    var m = getMargins();
+    var root = document.documentElement;
+    root.style.setProperty("--m-top", m.top + "cm");
+    root.style.setProperty("--m-right", m.right + "cm");
+    root.style.setProperty("--m-bottom", m.bottom + "cm");
+    root.style.setProperty("--m-left", m.left + "cm");
+  }
+
   function render() {
     document.documentElement.style.setProperty("--cell", $("cellSize").value + "px");
+    applyMargins();
     var pages = paginate(state.words);
     var title = $("titleInput").value || "看拼音写词语练习";
     var showMeta = $("showMeta").checked;
     var markPoly = $("markPoly").checked;
-    var isAnswer = state.mode === "answer";
-    var printBoth = $("printBoth").checked && !isAnswer;
     var name = $("nameInput").value;
     var klass = $("classInput").value;
+    var showPractice = state.mode === "practice" || state.mode === "both";
+    var showAnswer = state.mode === "answer" || state.mode === "both";
 
     function pageBlocks(answer) {
       return pages.map(function (ws, pi) {
@@ -350,30 +376,14 @@ var MARKS = { a:"āáǎàa", e:"ēéěèe", i:"īíǐìi", o:"ōóǒòo", u:"ū�
               '</span><span>班级：' + (klass ? escapeHtml(klass) : "<u></u>") + "</span></div>"
             : "") +
           '</header><div class="words">' + items + "</div>" +
-          '<footer class="page-foot"><span>' + (answer ? "答案页" : "练习页") +
+          '<footer class="page-foot"><span>' + (answer ? "答案页" : "默写页") +
           "</span><span>第 " + (pi + 1) + " 页 / 共 " + pages.length + " 页</span></footer></section>";
       }).join("");
     }
 
-    $("sheetStack").innerHTML = pageBlocks(isAnswer) + (printBoth ? pageBlocks(true) : "");
-    $("countNote").textContent = state.words.length + " 个词语 · " + pages.length + " 页";
+    $("sheetStack").innerHTML = (showPractice ? pageBlocks(false) : "") + (showAnswer ? pageBlocks(true) : "");
+    $("countNote").textContent = state.words.length + " 个词语 · " + (pages.length * ((showPractice ? 1 : 0) + (showAnswer ? 1 : 0))) + " 页";
     bindPinyinClicks();
-    renderEditor();
-  }
-
-  function renderEditor() {
-    if (!state.words.length) { $("editorCard").hidden = true; return; }
-    $("editorCard").hidden = false;
-    $("editorList").innerHTML = state.words.map(function (w, wi) {
-      return '<div class="word-edit">' + w.chars.map(function (c, ci) {
-        return '<div class="syll' + (c.poly ? " poly" : "") + '" data-w="' + wi +
-          '" data-c="' + ci + '"><div class="ch">' + escapeHtml(c.ch) +
-          '</div><div class="py">' + escapeHtml(c.py) + "</div></div>";
-      }).join("") + "</div>";
-    }).join("");
-    $("editorList").querySelectorAll(".syll").forEach(function (el) {
-      el.addEventListener("click", function () { openPop(+el.dataset.w, +el.dataset.c, el); });
-    });
   }
 
   function bindPinyinClicks() {
@@ -444,9 +454,10 @@ var MARKS = { a:"āáǎàa", e:"ēéěèe", i:"īíǐìi", o:"ōóǒòo", u:"ū�
   $("printBtn").onclick = function () { window.print(); };
   $("cellSize").onchange = render;
   $("toneType").onchange = generate;
-  ["showMeta", "markPoly", "printBoth", "titleInput", "nameInput", "classInput"].forEach(function (id) {
+  ["showMeta", "markPoly", "titleInput", "nameInput", "classInput", "mTop", "mBottom", "mLeft", "mRight"].forEach(function (id) {
     var el = $(id);
-    el.addEventListener(el.type === "checkbox" ? "change" : "input", render);
+    if (!el) return;
+    el.addEventListener(el.type === "checkbox" ? "change" : (el.type === "number" ? "change" : "input"), render);
   });
   $("modeSeg").onclick = function (e) {
     var b = e.target.closest("button");
